@@ -35,7 +35,7 @@ app.post("/chat", async (req, res) => {
     res.json({ response: hasil });
 
   } catch (err) {
-    console.error("❌ Gagal konek ke HuggingFace Space:", err?.response?.data || err.message);
+    const response = await axios.post("https://bebgpt.hf.space/run/predict", {
     res.status(500).json({ error: "Gagal ambil respon dari HuggingFace Space" });
   }
 });
