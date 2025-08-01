@@ -6,40 +6,36 @@ const port = process.env.PORT || 8080;
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("🔥 Bebz-GPT Backend is Live with HuggingFace AI!");
+  res.send("🔥 Bebz-GPT Terhubung ke HuggingFace Space!");
 });
 
 app.post("/chat", async (req, res) => {
-  const prompt = req.body.prompt;
-  const hf_token = process.env.HF_API_KEY;
-  const model = "HuggingFaceH4/zephyr-7b-beta"; // bisa diganti sesuai kebutuhan
+  const { prompt } = req.body;
 
   if (!prompt) {
     return res.status(400).json({ error: "Prompt kosong" });
   }
 
   try {
-    const response = await axios.post(
-      `https://api-inference.huggingface.co/models/${model}`,
-      { inputs: prompt },
-      {
-        headers: {
-          Authorization: `Bearer ${hf_token}`,
-          "Content-Type": "application/json"
-        },
-        timeout: 60000
-      }
-    );
+    const response = await axios.post("https://bebgpt.hf.space/api/predict", {
+      data: [
+        prompt,
+        "You are a friendly Chatbot.",
+        512,
+        0.7,
+        0.95
+      ]
+    });
 
-    const hasil = response.data?.[0]?.generated_text || "Model tidak memberikan jawaban.";
+    const hasil = response.data?.data?.[0] || "AI tidak memberikan respon.";
     res.json({ response: hasil });
 
   } catch (err) {
-    console.error("❌ Gagal konek ke Hugging Face:", err.response?.data || err.message);
-    res.status(500).json({ error: "Gagal ambil respon dari model AI Hugging Face" });
+    console.error("❌ Gagal konek ke HuggingFace Space:", err?.response?.data || err.message);
+    res.status(500).json({ error: "Gagal ambil respon dari HuggingFace Space" });
   }
 });
 
 app.listen(port, () => {
-  console.log(`🚀 Bebz-GPT dengan AI aktif di http://localhost:${port}`);
+  console.log(`🚀 Bebz-GPT jalan di http://localhost:${port}`);
 });
