@@ -2,7 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const app = express();
 const port = process.env.PORT || 8080;
-
+f
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -17,23 +17,22 @@ app.post("/chat", async (req, res) => {
   }
 
   try {
-    const response = await axios.post(
-      "https://bebgpt.hf.space/run/predict",
-      {
-        data: [
-          prompt,
-          "You are a friendly Chatbot.",
-          512,
-          0.7,
-          0.95,
-        ],
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+   const response = await axios.post(
+  "https://bebgpt.hf.space/chat",
+  {
+    message: prompt,
+    system_message: "You are a friendly Chatbot.",
+    max_tokens: 512,
+    temperature: 0.7,
+    top_p: 0.95,
+  },
+  {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+);
+
 
     const hasil = response.data && response.data[0]
       ? response.data[0]
