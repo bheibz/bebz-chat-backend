@@ -18,17 +18,22 @@ app.post("/chat", async (req, res) => {
 
   try {
     const response = await axios.post(
-      "https://bebz-gpt.hf.space/run/predict",
-      {
-        data: [prompt, "You are a helpful assistant.", 512, 0.7, 0.95]
-      },
-      {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
+  "https://bebgpt.hf.space/api/predict",
+  {
+    data: [
+      prompt,
+      "You are a helpful assistant.",
+      512,
+      0.7,
+      0.95
+    ]
+  },
+  {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
+);
     const result = response.data && response.data.data
       ? response.data.data[0]
       : "AI tidak merespon.";
