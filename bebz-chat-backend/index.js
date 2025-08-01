@@ -17,7 +17,7 @@ app.post("/chat", async (req, res) => {
   }
 
   try {
-    const response = await axios.post("https://bebgpt.hf.space/api/predict", {
+    const response = await axios.post("https://bebgpt.hf.space/run/predict", {
       data: [
         prompt,
         "You are a friendly Chatbot.",
@@ -25,9 +25,13 @@ app.post("/chat", async (req, res) => {
         0.7,
         0.95
       ]
+    }, {
+      headers: {
+        "Content-Type": "application/json"
+      }
     });
 
-    const hasil = response.data?.data?.[0] || "AI tidak memberikan respon.";
+    const hasil = response.data?.[0] || "AI tidak memberikan respon.";
     res.json({ response: hasil });
 
   } catch (err) {
