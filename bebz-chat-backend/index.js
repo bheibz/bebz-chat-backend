@@ -17,26 +17,41 @@ app.post("/chat", async (req, res) => {
   }
 
   try {
-    const response = await axios.post("https://bebgpt.hf.space/run/predict", {
-      data: [
-        prompt,
-        "You are a friendly Chatbot.",
-        512,
-        0.7,
-        0.95
-      ]
-    }, {
-      headers: {
-        "Content-Type": "application/json"
+    const response = await axios.post(
+      "https://bebgpt.hf.space/run/predict",
+      {
+        data: [
+          prompt,
+          "You are a friendly Chatbot.",
+          512,
+          0.7,
+          0.95,
+        ],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    });
+    );
 
-    const hasil = response.data?.[0] || "AI tidak memberikan respon.";
+    const hasil = response.data && response.data[0]
+      ? response.data[0]
+      : "AI tidak memberikan respon.";
+    
     res.json({ response: hasil });
 
   } catch (err) {
-    const response = await axios.post("https://bebgpt.hf.space/run/predict", {
-    res.status(500).json({ error: "Gagal ambil respon dari HuggingFace Space" });
+    console.error("❌ Error detail:", {
+      message: err.message,
+      status: err.response && err.response.status,
+      data: err.response && err.response.data,
+    });
+
+    res.status(500).json({
+      error: "Gagal ambil respon dari HuggingFace Space",
+      detail: err.response ? err.response.data : err.message
+    });
   }
 });
 
